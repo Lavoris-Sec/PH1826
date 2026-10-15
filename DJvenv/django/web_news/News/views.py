@@ -33,5 +33,16 @@ def index(request):
     return render(request, "news/index.html", context)
 
 
+def category(request):
+    context = {
+        "category_name": "Технологии",
+        "articles": [
+            "Представлена новая модель смартфона",
+            "Компания выпустила обновление программного обеспечения",
+            "Учёные разработали новый процессор",
+        ],
+    }
+    return render(request, "news/category.html", context)
+
 def about(request):
     return HttpResponse("О нашем новостном издании")
