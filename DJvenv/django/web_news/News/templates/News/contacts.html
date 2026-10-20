@@ -1,0 +1,20 @@
+{% extends "News/base.html" %}
+{% block title %}
+Контакты
+{% endblock %}
+
+{% block content %}
+    <h2>{{ title }}</h2>
+
+    <section>
+        <h3>Способы связаться с нами</h3>
+
+        <ul>
+            {% for article in articles %}
+                <li>{{ article }}</li>
+            {% empty %}
+                <li>Не.</li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

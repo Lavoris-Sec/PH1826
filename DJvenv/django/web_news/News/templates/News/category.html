@@ -1,27 +1,48 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Категория новостей</title>
-</head>
-<body>
-    <header>
-        <h1>Новостной портал</h1>
-    </header>
-    <main>
-        <h2>Категория: {{ category_name }}</h2>
+{% extends "News/base.html" %}
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Категория новостей</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <header>-->
+<!--        <h1>Новостной портал</h1>-->
+<!--    </header>-->
+<!--    <main>-->
+<!--        <h2>Категория: {{ category_name }}</h2>-->
+<!--        <h3>Последние публикации</h3>-->
+<!--        <ul>-->
+<!--            {% for article in articles %}-->
+<!--            <li>{{ article }}</li>-->
+<!--            {% empty %}-->
+<!--            <li>В этой категории пока нет новостей.</li>-->
+<!--            {% endfor %}-->
+<!--        </ul>-->
+<!--    </main>-->
+<!--    <footer>-->
+<!--        <p>Учебный проект ITSTEP</p>-->
+<!--    </footer>-->
+<!--</body>-->
+<!--</html>-->
+
+{% block title %}
+Категории
+{% endblock %}
+
+{% block content %}
+    <h2>{{ category_name }}</h2>
+
+    <section>
         <h3>Последние публикации</h3>
+
         <ul>
             {% for article in articles %}
-            <li>{{ article }}</li>
+                <li>{{ article }}</li>
             {% empty %}
-            <li>В этой категории пока нет новостей.</li>
+                <li>Пока нет опубликованных новостей.</li>
             {% endfor %}
         </ul>
-    </main>
-    <footer>
-        <p>Учебный проект ITSTEP</p>
-    </footer>
-</body>
-</html>
+    </section>
+{% endblock %}

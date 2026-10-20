@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+
 # def index(request):
 #     return HttpResponse("Главная страница новостей")
 
@@ -22,7 +23,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    context = {
+    content = {
         "title": "Главные новости дня",
         "articles": [
             "В городе открылся новый парк",
@@ -30,11 +31,11 @@ def index(request):
             "В университете начался учебный год",
         ],
     }
-    return render(request, "news/index.html", context)
+    return render(request, "news/index.html", content)
 
 
 def category(request):
-    context = {
+    content = {
         "category_name": "Технологии",
         "articles": [
             "Представлена новая модель смартфона",
@@ -42,7 +43,28 @@ def category(request):
             "Учёные разработали новый процессор",
         ],
     }
-    return render(request, "news/category.html", context)
+    return render(request, "news/category.html", content)
+
 
 def about(request):
-    return HttpResponse("О нашем новостном издании")
+    content = {
+        "title": "О нас",
+        "articles": [
+            "IT Step",
+            "Продаем бананы и людей",
+            "Бананов нет",
+        ],
+    }
+    return render(request, "news/category.html", content)
+
+
+def contacts(request):
+    content = {
+        "title": "Контакты",
+        "articles": [
+            "+375 29 123-45-67",
+            "example@gmail.com",
+            "@PavelDurov",
+        ],
+    }
+    return render(request, "news/category.html", content)
