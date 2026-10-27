@@ -2,6 +2,13 @@ from django.db import models
 
 
 class Article(models.Model):
+
+    author = models.CharField(
+        max_length=100,
+        default="Редакция",
+        verbose_name="Автор",
+    )
+
     title = models.CharField(
         max_length=200,
         verbose_name="Заголовок",

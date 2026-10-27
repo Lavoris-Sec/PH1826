@@ -16,14 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-# Импортируем views из папки web_news.News
-from News import views
+# Импортируем views из папки web_news.news
+from news import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('about/', views.about, name='about'),
     path("category/", views.category, name="category"),
-    path("contacts", views.contacts, name='contacts')
+    path("contacts/", views.contacts, name='contacts')
 ]
 

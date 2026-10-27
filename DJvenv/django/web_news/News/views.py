@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from .models import Article
 from django.shortcuts import render
 
 
@@ -7,7 +8,7 @@ from django.shortcuts import render
 
 
 # def index(request):
-#     return render(request, "News/index.html")
+#     return render(request, "news/index.html")
 
 
 # def index(request):
@@ -25,11 +26,8 @@ from django.shortcuts import render
 def index(request):
     content = {
         "title": "Главные новости дня",
-        "articles": [
-            "В городе открылся новый парк",
-            "Учёные представили новую технологию",
-            "В университете начался учебный год",
-        ],
+        # Берем из базы только опубликованные новости (is_published=True)
+        "articles": Article.objects.filter(is_published=True)
     }
     return render(request, "news/index.html", content)
 
@@ -55,7 +53,8 @@ def about(request):
             "Бананов нет",
         ],
     }
-    return render(request, "news/category.html", content)
+    return render(request, "news/about.html", content)      # ← about.html
+
 
 
 def contacts(request):
@@ -67,4 +66,4 @@ def contacts(request):
             "@PavelDurov",
         ],
     }
-    return render(request, "news/category.html", content)
+    return render(request, "news/contacts.html", content)
