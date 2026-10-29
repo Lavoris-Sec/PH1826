@@ -20,15 +20,23 @@ from django.urls import path
 from news import views
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.index, name='home'),
+    path('about/', views.about, name='about'),
+    path("category/", views.category, name="category"),
+    path("contacts/", views.contacts, name='contacts'),
+
+
     path(
         "article/<int:article_id>/",
         views.article_detail,
         name="article_detail",
     ),
-    path('admin/', admin.site.urls),
-    path('', views.index, name='home'),
-    path('about/', views.about, name='about'),
-    path("category/", views.category, name="category"),
-    path("contacts/", views.contacts, name='contacts')
+
+    path(
+        "category/<str:category_name>/",
+        views.category,
+        name="category_detail",
+    ),
 ]
 

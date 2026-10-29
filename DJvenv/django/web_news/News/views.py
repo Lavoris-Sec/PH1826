@@ -84,3 +84,28 @@ def article_detail(request, article_id):
         "news/article_detail.html",
         context,
     )
+
+
+def category(request, category_name=None):
+    if category_name is None:
+        articles = Article.objects.filter(
+            is_published=True
+        ).order_by("-created_at")
+
+        category_name = "Все категории"
+    else:
+        articles = Article.objects.filter(
+            is_published=True,
+            category__iexact=category_name,
+        ).order_by("-created_at")
+
+    context = {
+        "articles": articles,
+        "category_name": category_name,
+    }
+
+    return render(
+        request,
+        "news/category.html",
+        context,
+    )
