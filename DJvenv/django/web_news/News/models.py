@@ -14,6 +14,12 @@ class Article(models.Model):
         verbose_name="Заголовок",
     )
 
+    category = models.CharField(
+        max_length=100,
+        default="Общее",
+        verbose_name="Категория",
+    )
+
     content = models.TextField(
         verbose_name="Текст новости",
     )

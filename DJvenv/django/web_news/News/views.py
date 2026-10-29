@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from .models import Article
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 
 # def index(request):
@@ -53,8 +53,7 @@ def about(request):
             "Бананов нет",
         ],
     }
-    return render(request, "news/about.html", content)      # ← about.html
-
+    return render(request, "news/about.html", content)  # ← about.html
 
 
 def contacts(request):
@@ -67,3 +66,21 @@ def contacts(request):
         ],
     }
     return render(request, "news/contacts.html", content)
+
+
+def article_detail(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id,
+        is_published=True,
+    )
+
+    context = {
+        "article": article,
+    }
+
+    return render(
+        request,
+        "news/article_detail.html",
+        context,
+    )

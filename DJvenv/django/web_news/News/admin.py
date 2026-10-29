@@ -4,7 +4,17 @@ from .models import Article
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "author", "created_at", "is_published")
-    list_filter = ("is_published", "created_at")
+    list_display = (
+        "id",
+        "title",
+        "category",
+        "created_at",
+        "is_published",
+    )
+    list_filter = (
+        "category",
+        "is_published",
+        "created_at",
+    )
     search_fields = ("title", "content")
     ordering = ("-created_at",)
