@@ -40,10 +40,17 @@ urlpatterns = [
         name="category_detail",
     ),
 
+    # path(
+    #     "article/<int:article_id>/edit/",
+    #     views.edit_article,
+    #     name="article_edit"
+    # ),
+
+
     path(
-        "article/<int:article_id>/edit/",
-        views.edit_article,
-        name="article_edit"
+        "test-form/",
+        views.test_form,
+        name="test_form",
     ),
 ]
 

@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from .models import Article
 from django.shortcuts import render, get_object_or_404, redirect
+from .forms import ArticleForm
 
 
 def index(request):
@@ -91,40 +92,101 @@ def category(request, category_name=None):
     )
 
 
-def edit_article(request, article_id):
-    article = get_object_or_404(
-        Article,
-        id=article_id
-    )
+# def edit_article(request, article_id):
+#     article = get_object_or_404(
+#         Article,
+#         id=article_id
+#     )
+#
+#     if request.method == "POST":
+#         form = ArticleForm(
+#             request.POST,
+#             request.FILES,
+#             instance=article
+#         )
+#
+#         if form.is_valid():
+#             article = form.save()
+#
+#             if article.is_published:
+#                 return redirect(
+#                     "article_detail",
+#                     article_id=article.id
+#                 )
+#
+#             return redirect("home")
+#
+#     else:
+#         form = ArticleForm(instance=article)
+#
+#     context = {
+#         "form": form,
+#         "article": article,
+#     }
+#
+#     return render(
+#         request,
+#         "news/edit_article.html",
+#         context
+#     )
+
+
+# def test_form(request):
+#     if request.method == "POST":
+#         title = request.POST.get("title")
+#         content = request.POST.get("content")
+#
+#         print("Заголовок:", title)
+#         print("Текст:", content)
+#
+#     return render(
+#         request,
+#         "news/test_form.html",
+#     )
+
+def test_form(request):
+    context = {}
 
     if request.method == "POST":
-        form = ArticleForm(
-            request.POST,
-            request.FILES,
-            instance=article
-        )
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+
+        context = {
+            "title": title,
+            "content": content,
+        }
+
+    return render(
+        request,
+        "news/test_form.html",
+        context,
+    )
+
+
+def add_article(request):
+
+    if request.method == "POST":
+
+        form = ArticleForm(request.POST)
 
         if form.is_valid():
+
             article = form.save()
 
-            if article.is_published:
-                return redirect(
-                    "article_detail",
-                    article_id=article.id
-                )
-
-            return redirect("home")
+            return redirect(
+                "article_detail",
+                article_id=article.id,
+            )
 
     else:
-        form = ArticleForm(instance=article)
+        form = ArticleForm()
 
     context = {
         "form": form,
-        "article": article,
     }
 
     return render(
         request,
-        "news/edit_article.html",
-        context
+        "news/add_article.html",
+        context,
     )
