@@ -173,10 +173,7 @@ def add_article(request):
 
             article = form.save()
 
-            return redirect(
-                "article_detail",
-                article_id=article.id,
-            )
+            return redirect("article_created")
 
     else:
         form = ArticleForm()
