@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 # Импортируем views из папки web_news.news
 from news import views
+from django import forms
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,6 +38,12 @@ urlpatterns = [
         "category/<str:category_name>/",
         views.category,
         name="category_detail",
+    ),
+
+    path(
+        "article/<int:article_id>/edit/",
+        views.edit_article,
+        name="article_edit"
     ),
 ]
 

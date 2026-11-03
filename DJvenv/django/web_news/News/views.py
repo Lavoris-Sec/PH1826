@@ -1,26 +1,6 @@
 from django.http import HttpResponse
 from .models import Article
-from django.shortcuts import render, get_object_or_404
-
-
-# def index(request):
-#     return HttpResponse("Главная страница новостей")
-
-
-# def index(request):
-#     return render(request, "news/index.html")
-
-
-# def index(request):
-#     context = {
-#         "title": "В городе открылся новый парк",
-#         "text": (
-#             "В центральной части города открылся новый парк "
-#             "с прогулочными дорожками и детской площадкой."
-#         ),
-#         "author": "Редакция",
-#     }
-#     return render(request, "news/index.html", context)
+from django.shortcuts import render, get_object_or_404, redirect
 
 
 def index(request):
@@ -32,16 +12,16 @@ def index(request):
     return render(request, "news/index.html", content)
 
 
-def category(request):
-    content = {
-        "category_name": "Технологии",
-        "articles": [
-            "Представлена новая модель смартфона",
-            "Компания выпустила обновление программного обеспечения",
-            "Учёные разработали новый процессор",
-        ],
-    }
-    return render(request, "news/category.html", content)
+# def category(request):
+#     content = {
+#         "category_name": "Технологии",
+#         "articles": [
+#             "Представлена новая модель смартфона",
+#             "Компания выпустила обновление программного обеспечения",
+#             "Учёные разработали новый процессор",
+#         ],
+#     }
+#     return render(request, "news/category.html", content)
 
 
 def about(request):
@@ -108,4 +88,43 @@ def category(request, category_name=None):
         request,
         "news/category.html",
         context,
+    )
+
+
+def edit_article(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id
+    )
+
+    if request.method == "POST":
+        form = ArticleForm(
+            request.POST,
+            request.FILES,
+            instance=article
+        )
+
+        if form.is_valid():
+            article = form.save()
+
+            if article.is_published:
+                return redirect(
+                    "article_detail",
+                    article_id=article.id
+                )
+
+            return redirect("home")
+
+    else:
+        form = ArticleForm(instance=article)
+
+    context = {
+        "form": form,
+        "article": article,
+    }
+
+    return render(
+        request,
+        "news/edit_article.html",
+        context
     )
