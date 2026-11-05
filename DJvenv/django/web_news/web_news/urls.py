@@ -19,9 +19,11 @@ from django.urls import path
 # Импортируем views из папки web_news.news
 from news import views
 from django import forms
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('', views.index, name='home'),
     path('about/', views.about, name='about'),
     path("category/", views.category, name="category"),
@@ -40,11 +42,11 @@ urlpatterns = [
         name="category_detail",
     ),
 
-    # path(
-    #     "article/<int:article_id>/edit/",
-    #     views.edit_article,
-    #     name="article_edit"
-    # ),
+    path(
+        "article/<int:article_id>/edit/",
+        views.edit_article,
+        name="article_edit"
+    ),
 
 
     path(
@@ -52,5 +54,25 @@ urlpatterns = [
         views.test_form,
         name="test_form",
     ),
+
+    path(
+        "add-article/",
+        views.add_article,
+        name="add_article",
+    ),
+
+    path(
+        "article-created/",
+        views.article_created,
+        name="article_created",
+    ),
+
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
 
