@@ -166,7 +166,7 @@ def test_form(request):
 def add_article(request):
     if request.method == "POST":
 
-        form = ArticleForm(request.POST)
+        form = ArticleForm(request.POST, request.FILES)
 
         if form.is_valid():
             article = form.save()
