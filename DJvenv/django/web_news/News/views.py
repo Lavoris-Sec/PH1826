@@ -2,6 +2,29 @@ from django.http import HttpResponse
 from .models import Article
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ArticleForm
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def delete_article(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id
+    )
+
+    if request.method == "POST":
+        article.delete()
+        return redirect("home")
+
+    context = {
+        "article": article,
+    }
+
+    return render(
+        request,
+        "news/delete_article.html",
+        context
+    )
 
 
 def index(request):

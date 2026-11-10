@@ -61,3 +61,11 @@ nav a:hover {
     text-decoration: none;
 }
 
+.article-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
