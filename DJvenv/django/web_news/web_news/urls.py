@@ -21,6 +21,7 @@ from news import views
 from django import forms
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
@@ -71,6 +72,20 @@ urlpatterns = [
         "article/<int:article_id>/delete/",
         views.delete_article,
         name="delete_article",
+    ),
+
+    path(
+        "accounts/login/",
+        auth_views.LoginView.as_view(
+            template_name="registration/login.html"
+        ),
+        name="login"
+    ),
+
+    path(
+        "accounts/logout/",
+        auth_views.LogoutView.as_view(),
+        name="logout"
     ),
 ]
 
