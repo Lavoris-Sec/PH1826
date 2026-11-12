@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path
 # Импортируем views из папки web_news.news
 from news import views
-from django import forms
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -86,6 +85,18 @@ urlpatterns = [
         "accounts/logout/",
         auth_views.LogoutView.as_view(),
         name="logout"
+    ),
+
+    path(
+        "article/<int:article_id>/archive/",
+        views.archive_article,
+        name="archive_article",
+    ),
+
+    path(
+        "article/<int:article_id>/restore/",
+        views.restore_article,
+        name="restore_article",
     ),
 ]
 

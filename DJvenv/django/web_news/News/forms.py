@@ -12,12 +12,14 @@ class ArticleForm(forms.ModelForm):
             "content",
             "category",
             "image",
+
         ]
 
         labels = {
             "title": "Заголовок новости",
             "content": "Текст новости",
             "category": "Категория",
+            "image": "Изображение",
         }
 
         widgets = {
@@ -41,5 +43,9 @@ class ArticleForm(forms.ModelForm):
                     "class": "form-control",
                     "placeholder": "Например: Спорт",
                 }
+            ),
+
+            "image": forms.ClearableFileInput(
+                attrs={"class": "form-control"}
             ),
         }

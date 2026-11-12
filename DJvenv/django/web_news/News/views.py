@@ -2,10 +2,11 @@ from django.http import HttpResponse
 from .models import Article
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ArticleForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 @login_required
+@permission_required("news.add_article", raise_exception=True)
 def delete_article(request, article_id):
     article = get_object_or_404(
         Article,
@@ -31,7 +32,10 @@ def index(request):
     content = {
         "title": "Главные новости дня",
         # Берем из базы только опубликованные новости (is_published=True)
-        "articles": Article.objects.filter(is_published=True)
+        "articles": Article.objects.filter(
+            is_published=True,
+            is_active=True,
+        )
     }
     return render(request, "news/index.html", content)
 
@@ -77,6 +81,7 @@ def article_detail(request, article_id):
         Article,
         id=article_id,
         is_published=True,
+        is_active=True,
     )
 
     context = {
@@ -93,13 +98,15 @@ def article_detail(request, article_id):
 def category(request, category_name=None):
     if category_name is None:
         articles = Article.objects.filter(
-            is_published=True
+            is_published=True,
+            is_active=True,
         ).order_by("-created_at")
 
         category_name = "Все категории"
     else:
         articles = Article.objects.filter(
             is_published=True,
+            is_active=True,
             category__iexact=category_name,
         ).order_by("-created_at")
 
@@ -116,17 +123,18 @@ def category(request, category_name=None):
 
 
 @login_required
+@permission_required("news.add_article", raise_exception=True)
 def edit_article(request, article_id):
     article = get_object_or_404(
         Article,
-        id=article_id
+        id=article_id,
     )
 
     if request.method == "POST":
         form = ArticleForm(
             request.POST,
             request.FILES,
-            instance=article
+            instance=article,
         )
 
         if form.is_valid():
@@ -187,6 +195,9 @@ def test_form(request):
     )
 
 
+@login_required
+@permission_required("news.add_article",
+                     raise_exception=True)
 def add_article(request):
     if request.method == "POST":
 
@@ -216,4 +227,54 @@ def article_created(request):
     return render(
         request,
         "news/article_created.html",
+    )
+
+
+@login_required
+@permission_required("news.change_article", raise_exception=True)
+def archive_article(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id,
+        is_active=True
+    )
+
+    if request.method == "POST":
+        article.is_active = False
+
+        article.save(
+            update_fields=["is_active"]
+        )
+
+        return redirect("home")
+
+    return render(
+        request,
+        "news/archive_article.html",
+        {"article": article}
+    )
+
+
+@login_required
+@permission_required("news.change_article", raise_exception=True)
+def restore_article(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id,
+        is_active=False
+    )
+
+    if request.method == "POST":
+        article.is_active = True
+
+        article.save(
+            update_fields=["is_active"]
+        )
+
+        return redirect("home")
+
+    return render(
+        request,
+        "news/restore_article.html",
+        {"article": article}
     )
