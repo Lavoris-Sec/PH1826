@@ -98,6 +98,18 @@ urlpatterns = [
         views.restore_article,
         name="restore_article",
     ),
+
+    path(
+        "archived-articles/",
+        views.archived_articles,
+        name="archived_articles",
+    ),
+
+    path(
+        "archived-articles/<int:article_id>/",
+        views.archived_article_detail,
+        name="archived_article_detail",
+    ),
 ]
 
 if settings.DEBUG:

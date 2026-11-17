@@ -2,42 +2,36 @@ from django.http import HttpResponse
 from .models import Article
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ArticleForm
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 
 
 @login_required
-@permission_required("news.add_article", raise_exception=True)
-def delete_article(request, article_id):
-    article = get_object_or_404(
-        Article,
-        id=article_id
-    )
-
-    if request.method == "POST":
-        article.delete()
-        return redirect("home")
-
-    context = {
-        "article": article,
-    }
-
-    return render(
-        request,
-        "news/delete_article.html",
-        context
-    )
-
-
-def index(request):
+@user_passes_test(lambda u: u.is_superuser, login_url='/')
+def archived_articles(request):
     content = {
-        "title": "Главные новости дня",
-        # Берем из базы только опубликованные новости (is_published=True)
+        "title": "Архивированные новости",
         "articles": Article.objects.filter(
             is_published=True,
-            is_active=True,
+            is_active=False,
         )
     }
-    return render(request, "news/index.html", content)
+    return render(request, "news/archived_articles.html", content)
+
+
+@login_required
+@permission_required("news.archived_articles", raise_exception=True)
+@user_passes_test(lambda u: u.is_superuser, login_url='/')
+def archived_article_detail(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id,
+        is_active=False,
+    )
+    return render(
+        request,
+        "news/archived_article_detail.html",
+        {"article": article}
+    )
 
 
 # def category(request):
@@ -140,11 +134,8 @@ def edit_article(request, article_id):
         if form.is_valid():
             article = form.save()
 
-            if article.is_published:
-                return redirect(
-                    "article_detail",
-                    article_id=article.id
-                )
+            if article.is_published and article.is_active:
+                return redirect("article_detail", article_id=article.id)
 
             return redirect("home")
 
@@ -162,6 +153,40 @@ def edit_article(request, article_id):
         context
     )
 
+
+@login_required
+@permission_required("news.add_article", raise_exception=True)
+def delete_article(request, article_id):
+    article = get_object_or_404(
+        Article,
+        id=article_id
+    )
+
+    if request.method == "POST":
+        article.delete()
+        return redirect("home")
+
+    context = {
+        "article": article,
+    }
+
+    return render(
+        request,
+        "news/delete_article.html",
+        context
+    )
+
+
+def index(request):
+    content = {
+        "title": "Главные новости дня",
+        # Берем из базы только опубликованные новости (is_published=True)
+        "articles": Article.objects.filter(
+            is_published=True,
+            is_active=True,
+        )
+    }
+    return render(request, "news/index.html", content)
 
 # def test_form(request):
 #     if request.method == "POST":

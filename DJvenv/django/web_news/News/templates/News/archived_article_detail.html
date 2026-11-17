@@ -1,0 +1,61 @@
+{% extends "news/base.html" %}
+
+{% block title %}
+{{ article.title }} (Архив) — Новостной портал
+{% endblock %}
+
+{% block content %}
+
+<article class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <a href="{% url 'archived_articles' %}" class="btn btn-outline-secondary mb-4">
+                ← Вернуться в архив
+            </a>
+
+            <div class="alert alert-warning">
+                <strong>Внимание:</strong> эта новость скрыта из общего доступа.
+            </div>
+
+            <div class="card shadow-sm border-secondary">
+                <div class="card-body p-4">
+
+                    <h1 class="card-title mb-3">
+                        {{ article.title }}
+                    </h1>
+
+                    {% if article.image %}
+                        <img
+                            src="{{ article.image.url }}"
+                            alt="{{ article.title }}"
+                            class="img-fluid rounded mb-4 article-image"
+                        >
+                    {% endif %}
+
+                    {% if article.created_at %}
+                        <p class="text-muted small">
+                            Дата:
+                            {{ article.created_at|date:"d.m.Y H:i" }}
+                        </p>
+                    {% endif %}
+
+                    <div class="article-content">
+                        {{ article.content|linebreaks }}
+                    </div>
+
+                    <hr>
+
+                    <a href="{% url 'restore_article' article_id=article.id %}" 
+                       class="btn btn-success">
+                        Восстановить новость
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</article>
+
+{% endblock %}

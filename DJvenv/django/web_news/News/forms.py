@@ -12,6 +12,7 @@ class ArticleForm(forms.ModelForm):
             "content",
             "category",
             "image",
+            "is_active",
 
         ]
 
@@ -48,4 +49,9 @@ class ArticleForm(forms.ModelForm):
             "image": forms.ClearableFileInput(
                 attrs={"class": "form-control"}
             ),
+
+            "is_active":
+                forms.CheckboxInput(
+                    attrs={"class": "form-check-input"}
+                ),
         }

@@ -43,43 +43,54 @@
                     Контакты
                 </a>
 
-{% if user.is_authenticated %}
+                {% if user.is_authenticated %}
 
-    <a class="nav-link" href="{% url 'add_article' %}">
-        Создать новость
-    </a>
+                    <a class="nav-link" href="{% url 'add_article' %}">
+                        Создать новость
+                    </a>
+                {% if user.is_superuser %}
+                    <a class="nav-link" href="{% url 'archived_articles' %}">
+                        Архив
+                    </a>
+                {% endif %}
 
-{% endif %}
+<!--          чтобы фильтровать по группам
+ @user_passes_test(lambda u: u.groups.filter(name='Администраторы').exists(), login_url='/')-->
+
+                {% endif %}
 
                 <a href="{% url 'admin:index' %}">
                     Админка
                 </a>
 
+
                 {% if user.is_authenticated %}
 
-    <span class="nav-link">
-        Вы вошли как: {{ user.username }}
-    </span>
+                    <span class="nav-link">
+                        Вы вошли как: {{ user.username }}
+                    </span>
 
-    <form
-        method="POST"
-        action="{% url 'logout' %}"
-        style="display: inline;"
-    >
-        {% csrf_token %}
+                    <form
+                        method="POST"
+                        action="{% url 'logout' %}"
+                        style="display: inline;"
+                    >
+                        {% csrf_token %}
 
-        <button type="submit" class="btn btn-outline-light btn-sm">
-            Выйти
-        </button>
-    </form>
+                        <button type="submit" class="btn btn-outline-light btn-sm" >
+                            Выйти
+                        </button>
+                    </form>
 
-{% else %}
 
-    <a href="{% url 'login' %}">
-        Войти
-    </a>
 
-{% endif %}
+                {% else %}
+
+                    <a href="{% url 'login' %}" class="nav-link">
+                        Войти
+                    </a>
+
+                {% endif %}
             </div>
         </div>
     </nav>
