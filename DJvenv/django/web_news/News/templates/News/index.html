@@ -12,40 +12,50 @@
     </div>
 </div>
 
+<!-- Форма поиска вынесена над сеткой карточек -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="GET" class="d-flex gap-2">
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Введите название новости"
+                value="{{ query }}"
+            >
+            <button type="submit" class="btn btn-primary">
+                Найти
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Сетка с карточками -->
 <div class="row">
     {% for article in articles %}
         <div class="col-12 mb-4">
-            <!-- ДЗ: Задание 2. Добавили border-primary для выделения -->
             <article class="card border-primary shadow-sm">
                 <div class="card-body">
 
-
-                {% if article.image %}
-                <img
-                    src="{{ article.image.url }}"
-                    alt="{{ article.title }}"
-                    class="img-fluid rounded mb-3"
-                    style="max-height: 250px; object-fit: cover;"
-                    >
-                {% endif %}
-
+                    {% if article.image %}
+                        <img
+                            src="{{ article.image.url }}"
+                            alt="{{ article.title }}"
+                            class="img-fluid rounded mb-3"
+                            style="max-height: 250px; object-fit: cover;"
+                        >
+                    {% endif %}
 
                     <h2 class="card-title h4">
                         <a href="{% url 'article_detail' article_id=article.id %}"
-                        class="text-decoration-none">
+                           class="text-decoration-none">
                             {{ article.title }}
                         </a>
                     </h2>
 
-
-
-                    <!-- Выводим автора -->
                     <p class="text-muted small">Автор: {{ article.author }}</p>
-
-                    <!-- Текст обрезается до 30 слов -->
                     <p class="card-text">{{ article.content|truncatewords:30 }}</p>
 
-                    <!-- ДЗ: Задание 2. Визуальное выделение даты (badge) -->
                     <p class="mb-0">
                         <span class="badge bg-secondary">
                             {{ article.created_at|date:"d.m.Y H:i" }}
@@ -54,12 +64,46 @@
                 </div>
             </article>
         </div>
-            {% empty %}
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        Пока нет опубликованных новостей.
-                    </div>
-                </div>
-            {% endfor %}
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Пока нет опубликованных новостей.
+            </div>
+        </div>
+    {% endfor %}
 </div>
+
+<!-- Красивая пагинация Bootstrap (показываем, только если страниц больше одной) -->
+{% if page_obj.has_other_pages %}
+    <nav aria-label="Навигация по страницам" class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&q={{ query }}">В начало</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}">Назад</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}">Вперёд</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ query }}">В конец</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+{% endif %}
+
 {% endblock %}

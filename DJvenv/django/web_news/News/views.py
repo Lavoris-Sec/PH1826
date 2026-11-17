@@ -3,6 +3,52 @@ from .models import Article
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ArticleForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.db.models import Q
+from django.core.paginator import Paginator
+
+
+def index(request):
+    # content = {
+    #     "title": "Главные новости дня",
+    #     # Берем из базы только опубликованные новости (is_published=True)
+    #     "articles": Article.objects.filter(
+    #         is_published=True,
+    #         is_active=True,
+    #     )
+    # }
+    # return render(request, "news/index.html", content)
+    query = request.GET.get("q", "").strip()
+
+    articles = Article.objects.filter(
+        is_published=True,
+        is_active=True
+    )
+
+    if query:
+        articles = articles.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query)
+        )
+
+    articles = articles.order_by("-created_at")
+
+    paginator = Paginator(articles, 5)
+
+    page_obj = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    context = {
+        "articles": page_obj,
+        "page_obj": page_obj,
+        "query": query,
+    }
+
+    return render(
+        request,
+        "news/index.html",
+        context
+    )
 
 
 @login_required
@@ -19,7 +65,6 @@ def archived_articles(request):
 
 
 @login_required
-@permission_required("news.archived_articles", raise_exception=True)
 @user_passes_test(lambda u: u.is_superuser, login_url='/')
 def archived_article_detail(request, article_id):
     article = get_object_or_404(
@@ -176,17 +221,6 @@ def delete_article(request, article_id):
         context
     )
 
-
-def index(request):
-    content = {
-        "title": "Главные новости дня",
-        # Берем из базы только опубликованные новости (is_published=True)
-        "articles": Article.objects.filter(
-            is_published=True,
-            is_active=True,
-        )
-    }
-    return render(request, "news/index.html", content)
 
 # def test_form(request):
 #     if request.method == "POST":
