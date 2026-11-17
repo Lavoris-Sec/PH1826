@@ -5,6 +5,7 @@ from .forms import ArticleForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.core.files.storage import default_storage
 
 
 def index(request):
@@ -200,25 +201,34 @@ def edit_article(request, article_id):
 
 
 @login_required
-@permission_required("news.add_article", raise_exception=True)
+@permission_required("news.delete_article", raise_exception=True)
 def delete_article(request, article_id):
+
     article = get_object_or_404(
         Article,
         id=article_id
     )
 
     if request.method == "POST":
-        article.delete()
-        return redirect("home")
 
-    context = {
-        "article": article,
-    }
+        image_name = article.image.name if article.image else None
+
+        article.delete()
+
+        if image_name:
+            image_is_used = Article.objects.filter(
+                image=image_name
+            ).exists()
+
+            if not image_is_used:
+                default_storage.delete(image_name)
+
+        return redirect("home")
 
     return render(
         request,
         "news/delete_article.html",
-        context
+        {"article": article}
     )
 
 
