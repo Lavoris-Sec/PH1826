@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/DJvenv/web_news" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/DJvenv/django/web_news" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.1 (itstep) (2)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.1 (itstep)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
